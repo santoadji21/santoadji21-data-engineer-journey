@@ -1,0 +1,17 @@
+pandas
+polars
+pyspark
+sqlalchemy
+psycopg2-binary
+duckdb
+faker
+python-dotenv
+kafka-python
+dbt-duckdb
+dbt-postgres
+great-expectations
+airbyte-cdk
+requests
+pyarrow
+fastapi
+uvicorn

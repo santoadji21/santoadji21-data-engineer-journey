@@ -1,0 +1,36 @@
+services:
+  de_workbench:
+      build: .
+      container_name: hotel_de_workbench
+      volumes:
+        - ../projects:/workspace/projects
+        - ../docs:/workspace/docs
+      working_dir: /workspace
+      environment:
+        - PYTHONUNBUFFERED=1
+        - PYTHONPATH=/workspace
+  postgres:
+    image: postgres:15-alpine
+    container_name: de_journey_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: journey_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d journey_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Placeholder for future services (NiFi, Kafka, etc.)
+  # nifi:
+  #   image: apache/nifi:latest
+  #   ports:
+  #     - "8443:8443"
+
+volumes:
+  postgres_data:
