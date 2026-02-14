@@ -26,11 +26,21 @@ services:
       timeout: 5s
       retries: 5
 
-  # Placeholder for future services (NiFi, Kafka, etc.)
-  # nifi:
-  #   image: apache/nifi:latest
-  #   ports:
-  #     - "8443:8443"
+  spark-master:
+    image: bitnami/spark:3.5
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+
+  spark-worker:
+    image: bitnami/spark:3.5
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
 
 volumes:
   postgres_data:
