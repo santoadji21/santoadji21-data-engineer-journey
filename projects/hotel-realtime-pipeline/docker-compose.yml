@@ -1,0 +1,105 @@
+version: '3.7'
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.10
+    container_name: redpanda
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --check=false
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr 0.0.0.0:8082
+      - --advertise-pandaproxy-addr localhost:8082
+    ports:
+      - 8081:8081
+      - 8082:8082
+      - 9092:9092
+      - 29092:29092
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+
+  console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.3
+    container_name: redpanda-console
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yaml; /app/console"
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yaml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:29092"]
+          schemaRegistry:
+            enabled: true
+            urls: ["http://redpanda:8081"]
+        redpanda:
+          adminApi:
+            enabled: true
+            urls: ["http://redpanda:9644"]
+    ports:
+      - 8080:8080
+    depends_on:
+      - redpanda
+
+  pms-legacy:
+    build: .
+    container_name: pms-legacy
+    command: watchmedo auto-restart --directory=./producer --pattern=*.py --recursive -- python producer/pms_legacy.py
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:29092
+    volumes:
+      - ./producer:/app/producer
+    depends_on:
+      - redpanda
+
+  pms-modern:
+    build: .
+    container_name: pms-modern
+    command: watchmedo auto-restart --directory=./producer --pattern=*.py --recursive -- python producer/pms_modern.py
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:29092
+    volumes:
+      - ./producer:/app/producer
+    depends_on:
+      - redpanda
+
+  pms-budget:
+    build: .
+    container_name: pms-budget
+    command: watchmedo auto-restart --directory=./producer --pattern=*.py --recursive -- python producer/pms_budget.py
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:29092
+    volumes:
+      - ./producer:/app/producer
+    depends_on:
+      - redpanda
+
+  consumer:
+    build: .
+    container_name: hotel-consumer
+    command: python consumer/main.py
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:29092
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - redpanda
+
+  api:
+    build: .
+    container_name: hotel-api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./data:/app/data
+      - ./api:/app/api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - consumer
+
+volumes:
+  redpanda-data:

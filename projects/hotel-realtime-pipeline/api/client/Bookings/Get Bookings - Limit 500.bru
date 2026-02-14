@@ -1,0 +1,22 @@
+meta {
+  name: Get Bookings - Limit 500
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/bookings?limit=500
+  body: none
+  auth: none
+}
+
+docs {
+  # Get Bookings - Limit 500
+  
+  Returns up to 500 most recent bookings.
+
+  Useful for:
+  - Bulk data export
+  - Analyzing recent trends
+  - Testing pagination/performance
+}

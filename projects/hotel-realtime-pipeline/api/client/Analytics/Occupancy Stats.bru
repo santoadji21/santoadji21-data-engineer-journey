@@ -1,0 +1,50 @@
+meta {
+  name: Occupancy Stats
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/stats/occupancy
+  body: none
+  auth: none
+}
+
+docs {
+  # Occupancy Stats by Source System
+  
+  Returns aggregated statistics grouped by source PMS system.
+
+  **Metrics:**
+  - `source` — which PMS system (legacy, modern, budget)
+  - `total_bookings` — count of bookings from that source
+  - `avg_revenue` — average booking amount
+
+  **Expected Response:**
+  ```json
+  [
+    {
+      "source": "legacy",
+      "total_bookings": 45,
+      "avg_revenue": 175.50
+    },
+    {
+      "source": "modern",
+      "total_bookings": 38,
+      "avg_revenue": 220.75
+    },
+    {
+      "source": "budget",
+      "total_bookings": 52,
+      "avg_revenue": 85.25
+    }
+  ]
+  ```
+
+  If no data exists yet, returns:
+  ```json
+  {
+    "message": "No data available yet"
+  }
+  ```
+}

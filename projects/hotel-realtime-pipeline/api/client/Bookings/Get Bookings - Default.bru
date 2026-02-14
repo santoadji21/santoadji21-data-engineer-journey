@@ -1,0 +1,31 @@
+meta {
+  name: Get Bookings - Default
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/bookings
+  body: none
+  auth: none
+}
+
+docs {
+  # Get Bookings - Default (100 records)
+  
+  Reads raw Parquet files and **normalizes 3 different PMS formats on the fly**
+  using DuckDB's JSON extraction capabilities.
+
+  ## The 3 Source Systems:
+  1. **Legacy PMS** — mainframe-style flat structure (GUEST_NM, ARR_DT, AMT)
+  2. **Modern PMS** — nested JSON (guest.lastName, booking.checkInDate, booking.totalPrice)
+  3. **Budget PMS** — minimal structure (client, start_date, cost)
+
+  ## Normalization:
+  DuckDB uses `COALESCE()` to try each field path until it finds a non-null value:
+  - Guest Name: `GUEST_NM` OR `guest.lastName` OR `client`
+  - Check-in Date: `ARR_DT` OR `booking.checkInDate` OR `start_date`
+  - Amount: `AMT` OR `booking.totalPrice` OR `cost`
+
+  Default limit: **100 records** (most recent first)
+}
