@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_layer
+    schema: main
+    tables:
+      - name: parquet_files
+        description: "Raw Parquet files from the data lake"
+        meta:
+          external_location: "/app/data/raw/*.parquet"

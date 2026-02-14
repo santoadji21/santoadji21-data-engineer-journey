@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  dagster:
+    build: .
+    container_name: hotel-dagster
+    environment:
+      - DBT_PROJECT_DIR=/app/dbt
+      - DAGSTER_HOME=/app/dagster_home
+      - DBT_PROFILES_DIR=/app/dbt
+    volumes:
+      - ./hotel_orchestrator:/app/hotel_orchestrator
+      - ./dagster.yaml:/app/dagster_home/dagster.yaml
+      # Mount the dbt project
+      - ../hotel-dbt:/app/dbt
+      # Mount the data so dbt can read/write it
+      - ../hotel-realtime-pipeline/data:/app/data
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    # Run dbt parse to regenerate manifest.json, then start Dagster
+    command: >
+      bash -c "cd /app/dbt && dbt deps && dbt parse && cd /app && dagster dev -h 0.0.0.0 -p 3000 -m hotel_orchestrator"

@@ -1,0 +1,7 @@
+hotel_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: '/app/data/hotel.duckdb'  # Persistent DB file
+      threads: 1

@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  dbt:
+    build: .
+    container_name: hotel-dbt
+    # Keep container running to allow manual dbt commands
+    command: tail -f /dev/null
+    volumes:
+      - .:/app/dbt
+      # Mount the data from the pipeline project so dbt can read the Parquet files
+      - ../hotel-realtime-pipeline/data:/app/data
+    environment:
+      # Tell dbt where to find profiles.yml (current directory)
+      - DBT_PROFILES_DIR=.
