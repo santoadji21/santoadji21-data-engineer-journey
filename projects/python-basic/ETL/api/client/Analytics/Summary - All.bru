@@ -1,0 +1,24 @@
+meta {
+  name: Summary - All
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/analytics/summary
+  body: none
+  auth: none
+}
+
+docs {
+  # Analytics Summary — All Data
+  Get aggregated booking statistics from the full hotel CSV dataset.
+
+  Uses DuckDB to query the CSV file directly — no pre-loading needed.
+
+  **Returns:**
+  - `total_bookings` — count of non-canceled bookings
+  - `total_revenue` — sum of ADR × nights
+  - `avg_adr` — average daily rate
+  - `top_countries` — top 5 countries by booking count
+}

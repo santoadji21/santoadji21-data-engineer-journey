@@ -1,0 +1,42 @@
+meta {
+  name: Create Booking
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/bookings
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "hotel": "City Hotel",
+    "guest_name": "Alya Rahman",
+    "country": "IDN",
+    "adr": 120.50,
+    "total_nights": 3,
+    "arrival_date": "2026-03-15"
+  }
+}
+
+docs {
+  # Create Booking
+  Ingest a new booking record via POST.
+
+  FastAPI auto-validates the request body against the `BookingCreate` schema.
+  Returns `201 Created` with the full booking record including computed `total_revenue`.
+
+  **Validation rules:**
+  - `hotel`: required string
+  - `guest_name`: required, 1-100 characters
+  - `country`: optional, 2-5 chars (default: "UNKNOWN")
+  - `adr`: required, must be > 0 and <= 10000
+  - `total_nights`: required, must be >= 1 and <= 365
+  - `arrival_date`: required, format YYYY-MM-DD
+}

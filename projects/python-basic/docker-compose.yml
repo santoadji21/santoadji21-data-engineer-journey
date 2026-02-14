@@ -11,3 +11,21 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
     restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: python-basic-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ETL:/app/ETL              # mount ETL code (hot reload picks up changes)
+      - ./notebooks/data:/app/notebooks/data  # share data folder with jupyter
+    command: >
+      uvicorn ETL.api.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app/ETL
+    restart: unless-stopped

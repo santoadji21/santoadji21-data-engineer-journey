@@ -1,0 +1,18 @@
+meta {
+  name: Summary - City Hotel 2016
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/analytics/summary?hotel=City Hotel&year=2016
+  body: none
+  auth: none
+}
+
+docs {
+  # Analytics Summary — City Hotel, 2016
+  Filtered analytics: only City Hotel bookings from 2016.
+
+  Tests the `hotel` and `year` query parameters together.
+}

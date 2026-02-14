@@ -1,0 +1,18 @@
+meta {
+  name: List Bookings - Filtered
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/bookings?hotel=City Hotel&country=IDN&limit=10
+  body: none
+  auth: none
+}
+
+docs {
+  # List Bookings - Filtered
+  Retrieve bookings filtered by City Hotel, country IDN, max 10 results.
+
+  Uses inline query params in the URL for a quick filtered test.
+}

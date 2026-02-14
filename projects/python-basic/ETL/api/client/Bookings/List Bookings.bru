@@ -1,0 +1,30 @@
+meta {
+  name: List Bookings
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/bookings
+  body: none
+  auth: none
+}
+
+params:query {
+  ~hotel: City Hotel
+  ~country: IDN
+  ~limit: 50
+}
+
+docs {
+  # List Bookings
+  Retrieve all ingested bookings with optional query filters.
+
+  **Query Parameters** (all optional):
+  - `hotel` — filter by hotel type (e.g. "City Hotel", "Resort Hotel")
+  - `country` — filter by ISO country code (e.g. "IDN", "PRT")
+  - `limit` — max results to return (1-500, default 50)
+
+  Tilde (~) prefix in params means they are **disabled by default**.
+  Enable them in Bruno to test filtering.
+}

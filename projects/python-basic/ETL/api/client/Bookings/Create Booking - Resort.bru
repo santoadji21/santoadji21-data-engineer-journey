@@ -1,0 +1,31 @@
+meta {
+  name: Create Booking - Resort
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/bookings
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "hotel": "Resort Hotel",
+    "guest_name": "Budi Santoso",
+    "country": "IDN",
+    "adr": 250.00,
+    "total_nights": 5,
+    "arrival_date": "2026-04-01"
+  }
+}
+
+docs {
+  # Create Booking - Resort Hotel
+  Second sample booking for a Resort Hotel with higher ADR.
+}

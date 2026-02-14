@@ -1,0 +1,38 @@
+meta {
+  name: Create Booking - Invalid
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/bookings
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "hotel": "City Hotel",
+    "guest_name": "",
+    "adr": -50,
+    "total_nights": 0,
+    "arrival_date": "not-a-date"
+  }
+}
+
+docs {
+  # Create Booking - Invalid Data
+  Test validation by sending invalid data.
+
+  **Expected:** `422 Unprocessable Entity` with validation error details.
+
+  Errors:
+  - `guest_name`: empty string (min_length=1)
+  - `adr`: negative value (must be > 0)
+  - `total_nights`: zero (must be >= 1)
+  - `arrival_date`: not a valid date format
+}
