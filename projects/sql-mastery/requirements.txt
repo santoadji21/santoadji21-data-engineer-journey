@@ -1,0 +1,16 @@
+jupyterlab>=4.0.0
+notebook>=7.0.0
+ipykernel>=6.0.0
+jupyterlab_materialdarker
+
+# Database Drivers & ORM
+psycopg2-binary>=2.9.0
+sqlalchemy>=2.0.0
+
+# Jupyter SQL Magic (run SQL cells directly)
+jupysql>=0.10.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
