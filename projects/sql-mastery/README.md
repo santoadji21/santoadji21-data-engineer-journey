@@ -1,30 +1,23 @@
 # SQL Mastery Lab
 
-A hands-on learning environment for mastering advanced SQL concepts using PostgreSQL and Jupyter Notebooks — powered by Docker.
+A hands-on learning environment for mastering advanced SQL concepts using PostgreSQL, Jupyter Notebooks, and real hotel industry data.
 
 ## Tech Stack
 
 | Component | Tool |
 |-----------|------|
 | Database | PostgreSQL 15 |
-| Interface | Jupyter Lab (with `jupysql` SQL magic) |
+| Interface | Jupyter Lab (with `jupysql`) |
 | Admin UI | PgAdmin 4 |
-| Dataset | Hotel Booking Demand (~119k rows) |
+| Datasets | Hotel Booking Demand (~119k rows) + Hotel Reservations (~36k rows) |
 
 ## Getting Started
 
 ```bash
-# Start all services (Postgres, Jupyter, PgAdmin)
-make up
-
-# Rebuild Jupyter image after changing requirements.txt
-make build
-
-# Stop services
-make down
-
-# Stop services and delete all data
-make clean
+make up      # Start Postgres, Jupyter, PgAdmin
+make build   # Rebuild Jupyter image after changing requirements
+make down    # Stop services
+make clean   # Stop + delete all data (fresh start)
 ```
 
 | Service | URL | Credentials |
@@ -33,34 +26,44 @@ make clean
 | PgAdmin | [http://localhost:5050](http://localhost:5050) | `admin@admin.com` / `password` |
 | Postgres | `localhost:5432` | `admin` / `password` / `mastery_db` |
 
-## Notebooks
+## Curriculum
 
-Work through these in order. Each notebook builds on concepts from the previous one.
+Work through these in order. Each notebook builds on the previous.
+
+### Foundation (Taught with Examples)
 
 | # | Notebook | Topics |
 |---|----------|--------|
-| 01 | [Setup & Data Exploration](notebooks/01_setup.ipynb) | Connect to Postgres, load CSV, schema inspection, NULL checks, basic analytics |
+| 01 | [Setup & Data Exploration](notebooks/01_setup.ipynb) | Connect, load CSV, schema inspection, NULL checks, basic analytics |
 | 02 | [Window Functions](notebooks/02_window_functions.ipynb) | ROW_NUMBER, RANK, DENSE_RANK, LAG/LEAD, running totals, moving averages, NTILE |
-| 03 | [Performance Tuning](notebooks/03_performance_tuning.ipynb) | EXPLAIN ANALYZE, Seq Scan vs Index Scan, B-Tree indexes, composite indexes, monitoring |
-| 04 | [Complex Aggregations](notebooks/04_complex_aggregations.ipynb) | GROUPING SETS, ROLLUP, CUBE, FILTER clause, CTEs for multi-step analysis |
+| 03 | [Performance Tuning](notebooks/03_performance_tuning.ipynb) | EXPLAIN ANALYZE, Seq Scan vs Index Scan, B-Tree, composite indexes |
+| 04 | [Complex Aggregations](notebooks/04_complex_aggregations.ipynb) | GROUPING SETS, ROLLUP, CUBE, FILTER clause, CTEs |
 
-Each notebook includes:
-- Clear learning objectives
-- Explained examples with real business questions
-- Observation notes on what to look for
-- Practice exercises with hints
+### Practice (Exercises — You Write the SQL)
 
-## Dataset Columns
+| # | Notebook | Topics |
+|---|----------|--------|
+| 05 | [Hotel Reservation Practice](notebooks/05_hotel_reservation_practice.ipynb) | 20 exercises on the OTA dataset across all skill levels |
 
-The `hotel_bookings` table has 36 columns. Key columns used across notebooks:
+### Advanced Course (Hotel-Tech Quizzes with Business Scenarios)
 
-- `hotel` — Resort Hotel / City Hotel
-- `is_canceled` — 1 = canceled, 0 = kept
-- `lead_time` — Days between booking and arrival
-- `arrival_date_year`, `arrival_date_month` — When the guest arrives
-- `adr` — Average Daily Rate (revenue per room-night)
-- `country` — Guest's country of origin
-- `market_segment` — How the booking was made (Online TA, Direct, etc.)
-- `customer_type` — Transient, Contract, Group, Transient-Party
-- `deposit_type` — No Deposit, Non Refund, Refundable
-- `agent` — Travel agent ID (NULL if direct)
+| # | Notebook | Topics | Quizzes |
+|---|----------|--------|---------|
+| 06 | [JOINs & Multi-Table](notebooks/06_joins_and_multi_table.ipynb) | INNER, LEFT, RIGHT, FULL OUTER, Self JOIN, CROSS JOIN, UNION | 10 |
+| 07 | [Subqueries & CTEs](notebooks/07_subqueries_and_ctes.ipynb) | Scalar, correlated, derived tables, ANY/ALL/EXISTS, chained CTEs | 10 |
+| 08 | [Functions by Data Type](notebooks/08_functions_by_type.ipynb) | Numeric, DateTime, String, NULL handling | 10 |
+| 09 | [Data Analysis Applications](notebooks/09_data_analysis_applications.ipynb) | Pivoting, rolling calcs, dedup, YoY, cohort analysis | 10 |
+
+### Capstone (No Hints)
+
+| # | Notebook | Topics |
+|---|----------|--------|
+| 10 | [Final Project](notebooks/10_final_project.ipynb) | 4-part business case: Revenue, Cancellations, Cross-System, Guest Intelligence |
+
+## Datasets
+
+### `hotel_bookings` (PMS — 119k rows, 36 columns)
+Property Management System data. Key columns: `hotel`, `is_canceled`, `lead_time`, `arrival_date_year/month`, `adr`, `country`, `market_segment`, `customer_type`, `deposit_type`, `reserved_room_type`, `assigned_room_type`, `name`, `email`
+
+### `hotel_reservations` (OTA — 36k rows, 19 columns)
+Channel Manager / OTA feed. Key columns: `booking_id`, `lead_time`, `arrival_year/month/date`, `avg_price_per_room`, `room_type_reserved`, `market_segment_type`, `booking_status`

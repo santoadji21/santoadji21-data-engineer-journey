@@ -14,6 +14,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
       # Mount the data folder to easily import CSVs if needed
       - ./data:/data
+      # Init scripts run on first startup (creates extra databases)
+      - ./init-scripts:/docker-entrypoint-initdb.d
 
   pgadmin:
     image: dpage/pgadmin4
