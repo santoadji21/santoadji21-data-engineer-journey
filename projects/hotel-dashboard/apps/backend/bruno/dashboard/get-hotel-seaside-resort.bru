@@ -1,0 +1,38 @@
+meta {
+  name: Get Hotel - Seaside Resort
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/hotel/seaside_resort
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.hotel_id: eq seaside_resort
+  res.body.hotel_name: eq Seaside Resort
+  res.body.pms_type: eq modern
+  res.body.total_rooms: eq 150
+}
+
+tests {
+  test("should return Seaside Resort details", function() {
+    const data = res.getBody();
+    expect(data.hotel_id).to.equal("seaside_resort");
+    expect(data.hotel_name).to.equal("Seaside Resort");
+    expect(data.pms_type).to.equal("modern");
+    expect(data.total_rooms).to.equal(150);
+  });
+
+  test("should include all KPI metrics", function() {
+    const data = res.getBody();
+    expect(data.total_revenue).to.be.a("number");
+    expect(data.adr).to.be.a("number");
+    expect(data.revpar).to.be.a("number");
+    expect(data.occupancy_rate).to.be.a("number");
+    expect(data.cancellation_rate).to.be.a("number");
+  });
+}

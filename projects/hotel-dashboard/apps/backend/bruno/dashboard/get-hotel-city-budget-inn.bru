@@ -1,0 +1,38 @@
+meta {
+  name: Get Hotel - City Budget Inn
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/hotel/city_budget_inn
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.hotel_id: eq city_budget_inn
+  res.body.hotel_name: eq City Budget Inn
+  res.body.pms_type: eq budget
+  res.body.total_rooms: eq 100
+}
+
+tests {
+  test("should return City Budget Inn details", function() {
+    const data = res.getBody();
+    expect(data.hotel_id).to.equal("city_budget_inn");
+    expect(data.hotel_name).to.equal("City Budget Inn");
+    expect(data.pms_type).to.equal("budget");
+    expect(data.total_rooms).to.equal(100);
+  });
+
+  test("should include all KPI metrics", function() {
+    const data = res.getBody();
+    expect(data.total_revenue).to.be.a("number");
+    expect(data.adr).to.be.a("number");
+    expect(data.revpar).to.be.a("number");
+    expect(data.occupancy_rate).to.be.a("number");
+    expect(data.cancellation_rate).to.be.a("number");
+  });
+}

@@ -1,0 +1,45 @@
+meta {
+  name: Get Hotel - Grand Budapest
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/hotel/grand_budapest
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.hotel_id: eq grand_budapest
+  res.body.hotel_name: eq The Grand Budapest
+  res.body.pms_type: eq legacy
+  res.body.total_rooms: eq 200
+}
+
+tests {
+  test("should return Grand Budapest details", function() {
+    const data = res.getBody();
+    expect(data.hotel_id).to.equal("grand_budapest");
+    expect(data.hotel_name).to.equal("The Grand Budapest");
+    expect(data.pms_type).to.equal("legacy");
+    expect(data.total_rooms).to.equal(200);
+  });
+
+  test("should include all KPI metrics", function() {
+    const data = res.getBody();
+    expect(data.total_revenue).to.be.a("number");
+    expect(data.adr).to.be.a("number");
+    expect(data.revpar).to.be.a("number");
+    expect(data.occupancy_rate).to.be.a("number");
+    expect(data.cancellation_rate).to.be.a("number");
+    expect(data.total_bookings).to.be.a("number");
+  });
+
+  test("should include trend data", function() {
+    const data = res.getBody();
+    expect(data.trends).to.be.an("array");
+    expect(data.trends.length).to.be.greaterThan(0);
+  });
+}

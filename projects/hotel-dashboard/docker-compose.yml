@@ -1,0 +1,33 @@
+services:
+  # Populates DuckDB with mock hotel data (runs once, then exits)
+  db-seed:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+      target: seed
+    container_name: hotel-db-seed
+    volumes:
+      - duckdb-data:/app/data
+    environment:
+      - DUCKDB_PATH=/app/data/hotel_dashboard.duckdb
+
+  # FastAPI backend serving data from DuckDB
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+      target: api
+    container_name: hotel-dashboard-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - duckdb-data:/app/data
+    environment:
+      - DUCKDB_PATH=/app/data/hotel_dashboard.duckdb
+    depends_on:
+      db-seed:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  duckdb-data:

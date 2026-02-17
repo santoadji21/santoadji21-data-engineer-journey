@@ -1,0 +1,31 @@
+meta {
+  name: Get Trends (By Hotel)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/trends?hotel_id=grand_budapest&days=30
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.hotel_id: eq grand_budapest
+  res.body.trends: isDefined
+}
+
+tests {
+  test("should return trends for Grand Budapest", function() {
+    const data = res.getBody();
+    expect(data.hotel_id).to.equal("grand_budapest");
+    expect(data.trends).to.be.an("array");
+    expect(data.trends.length).to.be.greaterThan(0);
+  });
+
+  test("should respect days limit", function() {
+    const data = res.getBody();
+    expect(data.trends.length).to.be.at.most(30);
+  });
+}

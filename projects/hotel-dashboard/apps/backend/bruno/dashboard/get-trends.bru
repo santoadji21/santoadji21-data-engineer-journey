@@ -1,0 +1,43 @@
+meta {
+  name: Get Trends (All Hotels)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/trends
+  body: none
+  auth: none
+}
+
+params:query {
+  ~hotel_id:
+  ~days: 30
+}
+
+assert {
+  res.status: eq 200
+  res.body.trends: isDefined
+}
+
+tests {
+  test("should return trend data", function() {
+    const data = res.getBody();
+    expect(data.trends).to.be.an("array");
+    expect(data.trends.length).to.be.greaterThan(0);
+  });
+
+  test("each trend entry should have date, revenue, bookings", function() {
+    const data = res.getBody();
+    data.trends.forEach(entry => {
+      expect(entry).to.have.property("date");
+      expect(entry).to.have.property("revenue");
+      expect(entry).to.have.property("bookings");
+    });
+  });
+
+  test("hotel_id should be null when no filter", function() {
+    const data = res.getBody();
+    expect(data.hotel_id).to.be.null;
+  });
+}

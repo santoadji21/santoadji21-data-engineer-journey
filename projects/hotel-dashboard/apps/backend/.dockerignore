@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+.git
+.gitignore
+.ruff_cache/
+*.duckdb
+*.duckdb.wal
+data/
+Dockerfile
+.dockerignore
+README.md

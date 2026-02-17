@@ -1,0 +1,42 @@
+meta {
+  name: Get Dashboard Summary
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/dashboard/summary
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.hotels: isDefined
+  res.body.total_revenue: isNumber
+  res.body.avg_adr: isNumber
+  res.body.avg_occupancy_rate: isNumber
+  res.body.avg_cancellation_rate: isNumber
+}
+
+tests {
+  test("should return summary for all 3 hotels", function() {
+    const data = res.getBody();
+    expect(data.hotels).to.be.an("array");
+    expect(data.hotels.length).to.equal(3);
+  });
+
+  test("each hotel should have required metrics", function() {
+    const data = res.getBody();
+    data.hotels.forEach(hotel => {
+      expect(hotel).to.have.property("hotel_id");
+      expect(hotel).to.have.property("hotel_name");
+      expect(hotel).to.have.property("total_revenue");
+      expect(hotel).to.have.property("adr");
+      expect(hotel).to.have.property("revpar");
+      expect(hotel).to.have.property("occupancy_rate");
+      expect(hotel).to.have.property("cancellation_rate");
+      expect(hotel).to.have.property("total_bookings");
+    });
+  });
+}
